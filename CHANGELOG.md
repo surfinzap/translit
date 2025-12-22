@@ -1,5 +1,13 @@
 # Changelog for Rusyn transliterate
 
+
+## 3.0.2 // 2025-12-22
+### 🔨 Maintenance
+- Update packages to their latest versions
+- Update publishing pipeline
+
+
+
 ## 3.0.1 // 2025-03-05
 
 ### 🐛 Fixes
