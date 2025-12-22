@@ -2,6 +2,7 @@
 
 
 ## 3.0.2 // 2025-12-22
+
 ### 🔨 Maintenance
 - Update packages to their latest versions
 - Update publishing pipeline
