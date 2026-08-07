@@ -21,10 +21,24 @@ Include translit as an NPM package in your web project:
 npm install translit-rue
 ```
 
+```javascript
+import { translit } from "translit-rue";        // ES module (recommended)
+const { translit } = require("translit-rue");   // CommonJS
+```
+
+Translit ships TypeScript definitions, so `translit()` is fully typed out of the box.
+
 
 ### JS library
 
-Download `dist/translit.min.js` and include it in your web project.
+Load the UMD build directly in the browser. It exposes a global `translit` object:
+
+```html
+<script src="https://unpkg.com/translit-rue/dist/translit.umd.js"></script>
+<script>
+  translit.translit("Korovkŷ", "latCyr");
+</script>
+```
 
 
 
@@ -52,4 +66,4 @@ Licensed under MIT license. (See [LICENCE.TXT](//github.com/surfinzap/translit/b
 
 
 ## Special thanks
-- [@vit-svoboda](https://github.com/vit-svoboda) for a help with gulp pipeline (2.0.0)
+- [@vit-svoboda](https://github.com/vit-svoboda) for a help with the build pipeline (2.0.0)

@@ -1,22 +1,48 @@
 {
   "name": "translit-rue",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "Translit is a JavaScript library that transliterates the Rusyn language between the Latin alphabet and the Cyrillic script.",
+  "type": "module",
+  "types": "./index.d.ts",
   "license": "MIT",
   "author": {
     "name": "Braňo Šandala",
     "email": "hi@brano.me"
   },
   "scripts": {
-    "build": "gulp build",
-    "test": "mocha --require @babel/register ./tests/**/*.test.js -R min --no-colors",
-    "test:dev": "mocha --require @babel/register ./tests/**/*.test.js -R min -w",
-    "lint": "eslint src/ tests/ gulpfile.js",
+    "build": "vite build",
+    "test": "vitest run",
+    "test:dev": "vitest",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
+    "format": "prettier --write src/ tests/",
     "prepare": "husky"
   },
-  "main": "dist/translit_dist.min.js",
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "tests/**/*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "main": "./dist/translit.cjs",
+  "module": "./dist/translit.es.js",
+  "browser": "./dist/translit.umd.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./dist/translit.es.js",
+      "require": "./dist/translit.cjs"
+    }
+  },
   "files": [
-    "dist/translit_dist.min.js"
+    "dist",
+    "index.d.ts",
+    "LICENSE.txt",
+    "README.md"
   ],
   "repository": {
     "type": "git",
@@ -30,25 +56,15 @@
     "Rusyn"
   ],
   "engines": {
-    "node": ">=6.9.4"
+    "node": ">=22"
   },
   "devDependencies": {
-    "@babel/cli": "^7.28.3",
-    "@babel/core": "^7.28.5",
-    "@babel/preset-env": "^7.28.5",
-    "@babel/register": "^7.28.3",
     "@eslint/js": "^9.39.2",
-    "babelify": "^10.0.0",
-    "browserify": "^17.0.1",
     "eslint": "^9.39.2",
-    "gulp": "^5.0.1",
-    "gulp-cli": "^3.1.0",
-    "gulp-header": "^2.0.9",
-    "gulp-replace": "^1.1.4",
-    "gulp-uglify": "^3.0.2",
     "husky": "^9.1.7",
-    "mocha": "^11.7.5",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "lint-staged": "^17.3.0",
+    "prettier": "^3.9.6",
+    "vite": "^8.2.1",
+    "vitest": "^4.1.10"
   }
 }

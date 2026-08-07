@@ -1,0 +1,464 @@
+/*!
+ * Translit v4.0.0 (Rusyn transliteration)
+ * Copyright 2014–2026 Braňo Šandala (https://brano.me)
+ *
+ * app: https://tota.sk/translit
+ * src: https://github.com/surfinzap/translit-rue
+ *
+ * Licensed under MIT (https://github.com/surfinzap/translit-rue/blob/main/LICENSE.txt)
+ */
+//#region src/constants.js
+var e = {
+	latin: "aeiouyŷ",
+	cyrillicHard: "аеіоуиыї",
+	cyrillicSoft: "яєїёю"
+}, t = "a-záäčďéěíĺľňóôöőŕřšťúüűůýŷž", n = "абвгґдезіийклмнопрстуфъыьцчжшїщёєюях", r = "a-záäčďéěíĺľňóôöőŕřšťúüűůýŷžабвгґдезіийклмнопрстуфъыьцчжшїщёєюях", i = {
+	latinLowerCase: t,
+	cyrillicLowerCase: n,
+	lowerCase: r,
+	upperCase: r.toUpperCase(),
+	all: "a-záäčďéěíĺľňóôöőŕřšťúüűůýŷžабвгґдезіийклмнопрстуфъыьцчжшїщёєюяхA-ZÁÄČĎÉĚÍĹĽŇÓÔÖŐŔŘŠŤÚÜŰŮÝŶŽАБВГҐДЕЗІИЙКЛМНОПРСТУФЪЫЬЦЧЖШЇЩЁЄЮЯХ"
+}, a = {
+	text: "текст",
+	taxi: "таксі",
+	jožk: "йожк"
+}, o = {};
+for (let [e, t] of Object.entries(a)) {
+	let n = e.charAt(0).toUpperCase() + e.slice(1);
+	o[n] = t.charAt(0).toUpperCase() + t.slice(1);
+}
+var s = {
+	homoglyphs: {
+		A: "А",
+		a: "а",
+		B: "В",
+		C: "С",
+		c: "с",
+		E: "Е",
+		e: "е",
+		H: "Н",
+		I: "І",
+		i: "і",
+		K: "К",
+		M: "М",
+		O: "О",
+		o: "о",
+		P: "Р",
+		p: "р",
+		T: "Т",
+		X: "Х",
+		x: "х",
+		Y: "У",
+		y: "у"
+	},
+	singleChars: {
+		a: "а",
+		b: "б",
+		v: "в",
+		h: "г",
+		g: "ґ",
+		d: "д",
+		e: "е",
+		z: "з",
+		i: "і",
+		y: "и",
+		j: "й",
+		k: "к",
+		l: "л",
+		m: "м",
+		n: "н",
+		o: "о",
+		p: "п",
+		r: "р",
+		s: "с",
+		t: "т",
+		u: "у",
+		f: "ф",
+		ŷ: "ы",
+		c: "ц",
+		č: "ч",
+		ž: "ж",
+		š: "ш",
+		A: "А",
+		B: "Б",
+		V: "В",
+		H: "Г",
+		G: "Ґ",
+		D: "Д",
+		E: "Е",
+		Z: "З",
+		I: "І",
+		Y: "И",
+		J: "Й",
+		K: "К",
+		L: "Л",
+		M: "М",
+		N: "Н",
+		O: "О",
+		P: "П",
+		R: "Р",
+		S: "С",
+		T: "Т",
+		U: "У",
+		F: "Ф",
+		Ŷ: "Ы",
+		C: "Ц",
+		Č: "Ч",
+		Ž: "Ж",
+		Š: "Ш"
+	},
+	digraphs: {
+		ja: "я",
+		Ja: "Я",
+		ju: "ю",
+		Ju: "Ю",
+		je: "є",
+		Je: "Є",
+		"’o": "ё",
+		"’O": "Ë",
+		ji: "ї",
+		Ji: "Ї",
+		ch: "х",
+		Ch: "Х",
+		šč: "щ",
+		Šč: "Щ",
+		"c’": "ць",
+		"C’": "Ць",
+		"s’": "сь",
+		"S’": "Сь",
+		"r’": "рь",
+		"R’": "Рь",
+		"z’": "зь",
+		"Z’": "Зь",
+		"ž’": "жь",
+		"Ž’": "Жь"
+	},
+	hardConsonants: {
+		"c’a": "ця",
+		"C’a": "Ця",
+		"c’i": "цї",
+		"C’i": "Цї",
+		"c’o": "цё",
+		"C’o": "Цё",
+		"c’u": "цю",
+		"C’u": "Цю",
+		"s’a": "ся",
+		"S’a": "Ся",
+		"s’i": "сї",
+		"S’i": "Сї",
+		"s’o": "сё",
+		"S’o": "Сё",
+		"s’u": "сю",
+		"S’u": "Сю",
+		"r’a": "ря",
+		"R’a": "Ря",
+		"r’i": "рї",
+		"R’i": "Рї",
+		"r’o": "рё",
+		"R’o": "Рё",
+		"r’u": "рю",
+		"R’u": "Рю",
+		"z’a": "зя",
+		"Z’a": "Зя",
+		"z’i": "зї",
+		"Z’i": "Зї",
+		"z’o": "зё",
+		"Z’o": "Зё",
+		"z’u": "зю",
+		"Z’u": "Зю",
+		"ž’a": "жя",
+		"Ž’a": "Жя",
+		"ž’i": "жї",
+		"Ž’i": "Жї",
+		"ž’o": "жё",
+		"Ž’o": "Жё",
+		"ž’u": "жю",
+		"Ž’u": "Жю",
+		zja: "зъя",
+		Zja: "Зъя",
+		zje: "зъє",
+		Zje: "Зъє",
+		zji: "зъї",
+		Zji: "Зъї",
+		zjo: "зъё",
+		Zjo: "Зъё",
+		zju: "зъю",
+		Zju: "Зъю",
+		"R’jo": "Рьё",
+		"r’jo": "рьё",
+		bji: "бъї",
+		dja: "дъя",
+		dje: "дъє",
+		dji: "дъї",
+		djo: "дъё",
+		dju: "дъю",
+		Dja: "Дъя",
+		Dje: "Дъє",
+		Dji: "Дъї",
+		Djo: "Дъё",
+		Dju: "Дъю",
+		nja: "нъя",
+		nje: "нъє",
+		nji: "нъї",
+		njo: "нъё",
+		nju: "нъю",
+		Nja: "Нъя",
+		Nje: "Нъє",
+		Nji: "Нъї",
+		Njo: "Нъё",
+		Nju: "Нъю"
+	},
+	softVowels: {
+		ja: "я",
+		je: "є",
+		ji: "ї",
+		jo: "ё",
+		ju: "ю",
+		Ja: "Я",
+		Je: "Є",
+		Ji: "Ї",
+		Jo: "Ё",
+		Ju: "Ю"
+	},
+	dtnlVowel: {
+		ďa: "дя",
+		Ďa: "Дя",
+		ťa: "тя",
+		Ťa: "Тя",
+		ňa: "ня",
+		Ňa: "Ня",
+		ľa: "ля",
+		Ľa: "Ля",
+		ďe: "дє",
+		Ďe: "Дє",
+		ťe: "тє",
+		Ťe: "Тє",
+		ňe: "нє",
+		Ňe: "Hє",
+		ľe: "лє",
+		Ľe: "Лє",
+		ďi: "дї",
+		Ďi: "Дї",
+		ťi: "тї",
+		Ťi: "Тї",
+		ňi: "нї",
+		Ňi: "Нї",
+		ľi: "лї",
+		Ľi: "Лї",
+		ďo: "дё",
+		Ďo: "Дё",
+		ťo: "тё",
+		Ťo: "Тё",
+		ňo: "нё",
+		Ňo: "Hё",
+		ľo: "лё",
+		Ľo: "Лё",
+		ďu: "дю",
+		Ďu: "Дю",
+		ťu: "тю",
+		Ťu: "Тю",
+		ňu: "ню",
+		Ňu: "Hю",
+		ľu: "лю",
+		Ľu: "Лю"
+	},
+	dtnlDoubled: {
+		ď: "д",
+		Ď: "Д",
+		ť: "т",
+		Ť: "Т",
+		ň: "н",
+		Ň: "Н",
+		ľ: "л",
+		Ľ: "Л"
+	},
+	dtnlAtWordEnd: {
+		ď: "дь",
+		Ď: "Дь",
+		ť: "ть",
+		Ť: "Ть",
+		ň: "нь",
+		Ň: "Нь",
+		ľ: "ль",
+		Ľ: "Ль"
+	},
+	johoJomu: {
+		joho: "ёго",
+		jomu: "ёму",
+		Joho: "Ёго",
+		Jomu: "Ёму"
+	},
+	jojJov: {
+		joj: "ёй",
+		Joj: "Ёй",
+		jov: "ёв",
+		Jov: "Ёв"
+	},
+	exceptions: a,
+	exceptionsCapitalized: o
+};
+//#endregion
+//#region src/utils.js
+function c(e) {
+	return e = e.replace(/* @__PURE__ */ RegExp("([csrzž])(['’ʼ‘‛´`′])([aeiou])", "gi"), "$1’$3"), e = e.replace(/* @__PURE__ */ RegExp("([csrzž])(['’ʼ‘‛´`′])(\\B)", "gi"), "$1’$3"), e = e.replace(/* @__PURE__ */ RegExp("(\\B)(['’ʼ‘‛´`′])([o])", "gi"), "$1’$3"), e;
+}
+function l(e, t) {
+	let n = RegExp(`[${i.lowerCase}]+`, "giu"), r = RegExp(`[${i.latinLowerCase}]`, "giu"), a = RegExp(`[${i.cyrillicLowerCase}]`, "giu");
+	return e.replace(n, (e) => {
+		let n = (e.match(r) || []).length, i = (e.match(a) || []).length, o;
+		return t === "latCyr" ? o = i <= n ? "cyrLat" : "latCyr" : t === "cyrLat" && (o = i >= n ? "latCyr" : "cyrLat"), u(e, s.homoglyphs, o);
+	});
+}
+function u(e, t, n) {
+	if (n === "cyrLat") for (let n in t) {
+		let r = new RegExp(t[n], "g");
+		e = e.replace(r, n);
+	}
+	else if (n === "latCyr") for (let n in t) {
+		let r = new RegExp(n, "g");
+		e = e.replace(r, t[n]);
+	}
+	return e;
+}
+//#endregion
+//#region src/lat_to_cyr.js
+function d(e) {
+	let t = /* @__PURE__ */ RegExp("(?<dtnl>[ďťňľ])(\\k<dtnl>)([aeiou])", "gi");
+	return e.replace(t, function(e, t, n, r) {
+		return u(t, s.dtnlDoubled, "latCyr") + n + r;
+	});
+}
+function f(t) {
+	let n = `(\\b)(naj)([${e.latin}])([${i.lowerCase}]+?)(šŷj|šoho|šomu|šim|šŷm|šŷ|šŷch|šŷma|ša|šoj|šij|šu|šov|še)`, r = new RegExp(n, "gi");
+	return t.replace(r, function(e, t, n, r, i, a) {
+		return t + u(n, s.singleChars, "latCyr") + r + i + a;
+	});
+}
+function p(e) {
+	let t = /* @__PURE__ */ RegExp("(\\b)((jo|ja|je|ji|ju){2,})", "gi");
+	return e.replace(t, function(e, t, n) {
+		return t + u(n, s.softVowels, "latCyr");
+	});
+}
+function m(e) {
+	let t = /* @__PURE__ */ RegExp("(\\b)(j)([aeiuyŷ])", "gi");
+	return e.replace(t, function(e, t, n, r) {
+		return t + u(n + r, s.softVowels, "latCyr");
+	});
+}
+function h(t) {
+	let n = "([" + e.latin + "])(ja|je|ji|jo|ju)", r = new RegExp(n, "gi");
+	return t.replace(r, function(e, t, n) {
+		return t + u(n, s.softVowels, "latCyr");
+	});
+}
+function g(e) {
+	let t = /* @__PURE__ */ RegExp("(\\b)(joj|jov)", "gi");
+	return e.replace(t, function(e, t, n) {
+		return t + u(n, s.jojJov, "latCyr");
+	});
+}
+function _(e) {
+	let t = "(^|[^" + i.all + "])(jo)([^" + i.all + "]|$)", n = new RegExp(t, "gi");
+	return e.replace(n, function(e, t, n, r) {
+		return t + u(n, s.softVowels, "latCyr") + r;
+	});
+}
+function v(e) {
+	let t = [
+		c,
+		f,
+		p,
+		g,
+		_,
+		m,
+		h,
+		d
+	], n = [
+		s.exceptionsCapitalized,
+		s.exceptions,
+		s.dtnlVowel,
+		s.johoJomu,
+		s.hardConsonants,
+		s.dtnlAtWordEnd,
+		s.digraphs,
+		s.singleChars
+	];
+	return e = t.reduce((e, t) => t(e), e), e = n.reduce((e, t) => u(e, t, "latCyr"), e), e;
+}
+//#endregion
+//#region src/cyr_to_lat.js
+function y(e) {
+	let t = /* @__PURE__ */ RegExp("(?<dtnl>[дтнл])(\\k<dtnl>)([яєїёю])", "gi");
+	return e.replace(t, function(e, t, n, r) {
+		return u(t, s.dtnlDoubled, "cyrLat") + n + r;
+	});
+}
+function b(t) {
+	let n = "([^" + i.all + "]|^)(([" + e.cyrillicSoft + "]){2,})", r = new RegExp(n, "gi");
+	return t.replace(r, function(e, t, n) {
+		return t + u(n, s.softVowels, "cyrLat");
+	});
+}
+function x(t) {
+	let n = "([^" + i.all + "]|^)([" + e.cyrillicSoft + "])", r = new RegExp(n, "gi");
+	return t.replace(r, function(e, t, n) {
+		return t + u(n, s.softVowels, "cyrLat");
+	});
+}
+function S(t) {
+	let n = "([" + e.cyrillicHard + "])([" + e.cyrillicSoft + "])", r = new RegExp(n, "gi");
+	return t.replace(r, function(e, t, n) {
+		return t + u(n, s.softVowels, "cyrLat");
+	});
+}
+function C(e) {
+	let t = [
+		b,
+		x,
+		S,
+		y
+	], n = [
+		s.exceptionsCapitalized,
+		s.exceptions,
+		s.dtnlVowel,
+		s.hardConsonants,
+		s.dtnlAtWordEnd,
+		s.digraphs,
+		s.singleChars
+	];
+	return e = t.reduce((e, t) => t(e), e), e = n.reduce((e, t) => u(e, t, "cyrLat"), e), e;
+}
+//#endregion
+//#region src/upper_case.js
+function w(e, t) {
+	let n = "([" + i.upperCase + "’]{2,})([^" + i.lowerCase + "]|$)", r = new RegExp(n, "g");
+	e = e.replace(r, function(e, n, r) {
+		switch (t) {
+			case "latCyr": return v(n.toLowerCase()).toUpperCase() + r;
+			case "cyrLat": return C(n.toLowerCase()).toUpperCase() + r;
+		}
+	});
+	let a = "([^" + i.upperCase + "’]|^)([" + i.upperCase + "’])(?=[-–—\\s][" + i.upperCase + "][^" + i.lowerCase + "’])", o = new RegExp(a, "g");
+	e = e.replace(o, function(e, n, r) {
+		switch (t) {
+			case "latCyr": return n + v(r.toLowerCase()).toUpperCase();
+			case "cyrLat": return n + C(r.toLowerCase()).toUpperCase();
+		}
+	});
+	let s = "([" + i.upperCase + "’][\\s])([" + i.upperCase + "])([^" + i.upperCase + "]|$)", c = new RegExp(s, "g");
+	return e = e.replace(c, function(e, n, r, i) {
+		switch (t) {
+			case "latCyr": return n + v(r.toLowerCase()).toUpperCase() + i;
+			case "cyrLat": return n + C(r.toLowerCase()).toUpperCase() + i;
+		}
+	}), e;
+}
+//#endregion
+//#region src/translit.js
+function T(e, t) {
+	if (t !== "latCyr" && t !== "cyrLat") throw Error(`Unsupported direction: ${t}`);
+	return e = l(e, t), e = w(e, t), (t === "latCyr" ? v : C)(e);
+}
+//#endregion
+export { T as translit };

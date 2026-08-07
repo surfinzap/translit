@@ -1,6 +1,43 @@
 # Changelog for Rusyn transliterate
 
 
+## 4.0.0 // 2026-08-07
+
+### 💥 Breaking changes
+
+Translit now ships separate builds for each way of using it, so the distributed file names have changed:
+
+| Before | Now |
+| --- | --- |
+| `dist/translit_dist.min.js` (NPM package) | `dist/translit.cjs` (CommonJS), `dist/translit.es.js` (ES module) |
+| `dist/translit.min.js` (browser) | `dist/translit.umd.js` (UMD) |
+
+**If you install translit via NPM**, nothing changes in your code. `import { translit } from "translit-rue"` and `require("translit-rue")` both keep working and now resolve to the right build automatically.
+
+**If you load translit with a `<script>` tag**, the global is now an object rather than a bare function. Update your calls from `translit(text, direction)` to `translit.translit(text, direction)`:
+  ```html
+  <script src="https://unpkg.com/translit-rue/dist/translit.umd.js"></script>
+  <script>
+    translit.translit("Korovkŷ", "latCyr");
+  </script>
+  ```
+
+**If you linked directly to `dist/translit.min.js`**, point to `dist/translit.umd.js` instead.
+
+### 💪 Improvements
+- Translit now has separate builds to be used as an ES module, a CommonJS import, and for direct browser usage.
+- Added TypeScript definitions, so `translit()` is typed out of the box.
+- Distributions are ~37% smaller (12.9 kB → 8.1 kB for the browser build) thanks to a modern build target.
+
+### 🔨 Maintenance
+- Update the build pipeline to Vite and Vitest, replacing gulp, Browserify, Babel and Mocha
+- Move `processUpperCase` into its own module to remove a circular dependency between the source files
+- The copyright banner is now generated at build time instead of being written into the source
+- Update NPM packages to their latest versions
+- Remove unused packages
+
+
+
 ## 3.0.2 // 2025-12-22
 
 ### 🔨 Maintenance

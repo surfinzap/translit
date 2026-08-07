@@ -1,7 +1,6 @@
-import assert from "assert";
+import { describe, expect, it } from "vitest";
 import * as latCyr from "../src/lat_to_cyr.js";
 import * as cyrLat from "../src/cyr_to_lat.js";
-
 
 describe("(l→c, unit) Superlative transliteration:\n", () => {
   let testCase = {
@@ -76,15 +75,13 @@ describe("(l→c, unit) Superlative transliteration:\n", () => {
 
   Object.keys(testCase).forEach((key) => {
     it("Latin → Cyrillic:\n", () => {
-      assert.equal(latCyr.mapSuperlative(key), testCase[key]);
+      expect(latCyr.mapSuperlative(key)).toBe(testCase[key]);
     });
     it("Cyrillic → Cyrillic (no change):\n", () => {
-      assert.equal(latCyr.mapSuperlative(testCase[key]), testCase[key]);
+      expect(latCyr.mapSuperlative(testCase[key])).toBe(testCase[key]);
     });
   });
 });
-
-
 
 describe("(l→c, c→l, unit) consecutive soft vowels (ja, je, ji, jo, ju):\n", () => {
   let testCase = {
@@ -127,21 +124,19 @@ describe("(l→c, c→l, unit) consecutive soft vowels (ja, je, ji, jo, ju):\n",
 
   Object.keys(testCase).forEach((key) => {
     it("Latin → Cyrillic:\n", () => {
-      assert.equal(latCyr.mapSoftVowelsSequence(key), testCase[key]);
+      expect(latCyr.mapSoftVowelsSequence(key)).toBe(testCase[key]);
     });
     it("Latin → Latin (no change):\n", () => {
-      assert.equal(cyrLat.mapSoftVowelsSequence(key), key);
+      expect(cyrLat.mapSoftVowelsSequence(key)).toBe(key);
     });
     it("Cyrillic → Latin:\n", () => {
-      assert.equal(cyrLat.mapSoftVowelsSequence(testCase[key]), key);
+      expect(cyrLat.mapSoftVowelsSequence(testCase[key])).toBe(key);
     });
     it("Cyrillic → Cyrillic (no change):\n", () => {
-      assert.equal(latCyr.mapSoftVowelsSequence(testCase[key]), testCase[key]);
+      expect(latCyr.mapSoftVowelsSequence(testCase[key])).toBe(testCase[key]);
     });
   });
 });
-
-
 
 describe("(l→c, c→l, unit) Ja, je, ji, jo, ju at the beginning of the word:\n", () => {
   let testCase = {
@@ -166,24 +161,19 @@ describe("(l→c, c→l, unit) Ja, je, ji, jo, ju at the beginning of the word:\
 
   Object.keys(testCase).forEach((key) => {
     it("Latin → Cyrillic:\n", () => {
-      assert.equal(latCyr.mapSoftVowelAtWordStart(key), testCase[key]);
+      expect(latCyr.mapSoftVowelAtWordStart(key)).toBe(testCase[key]);
     });
     it("Latin → Latin (no change):\n", () => {
-      assert.equal(cyrLat.mapSoftVowelAtWordStart(key), key);
+      expect(cyrLat.mapSoftVowelAtWordStart(key)).toBe(key);
     });
     it("Cyrillic → Latin:\n", () => {
-      assert.equal(cyrLat.mapSoftVowelAtWordStart(testCase[key]), key);
+      expect(cyrLat.mapSoftVowelAtWordStart(testCase[key])).toBe(key);
     });
     it("Cyrillic → Cyrillic (no change):\n", () => {
-      assert.equal(
-        latCyr.mapSoftVowelAtWordStart(testCase[key]),
-        testCase[key]
-      );
+      expect(latCyr.mapSoftVowelAtWordStart(testCase[key])).toBe(testCase[key]);
     });
   });
 });
-
-
 
 describe("(l→c, unit) Consolidate letter group (ďď | ťť | ňň | ľľ) followed by aeiou:\n", () => {
   let testCase = {
@@ -224,15 +214,13 @@ describe("(l→c, unit) Consolidate letter group (ďď | ťť | ňň | ľľ) fol
 
   Object.keys(testCase).forEach((key) => {
     it("Latin → Cyrillic:\n", () => {
-      assert.equal(latCyr.mapDtnlDoubled(key), testCase[key]);
+      expect(latCyr.mapDtnlDoubled(key)).toBe(testCase[key]);
     });
     it("Cyrillic → Cyrillic (no change):\n", () => {
-      assert.equal(latCyr.mapDtnlDoubled(testCase[key]), testCase[key]);
+      expect(latCyr.mapDtnlDoubled(testCase[key])).toBe(testCase[key]);
     });
   });
 });
-
-
 
 describe("(c→l, unit) Consolidate letter group (дд | тт | нн | лл) followed by яєїёю:\n", () => {
   let testCase = {
@@ -271,15 +259,13 @@ describe("(c→l, unit) Consolidate letter group (дд | тт | нн | лл) fol
 
   Object.keys(testCase).forEach((key) => {
     it("Cyrillic → Latin :\n", () => {
-      assert.equal(cyrLat.mapDtnlDoubled(testCase[key]), key);
+      expect(cyrLat.mapDtnlDoubled(testCase[key])).toBe(key);
     });
     it("Latin → Latin (no change):\n", () => {
-      assert.equal(cyrLat.mapDtnlDoubled(key), key);
+      expect(cyrLat.mapDtnlDoubled(key)).toBe(key);
     });
   });
 });
-
-
 
 describe("(l→c, unit) Ja, je, ji, jo, ju before a vowel:\n", () => {
   let testCase = {
@@ -330,18 +316,15 @@ describe("(l→c, unit) Ja, je, ji, jo, ju before a vowel:\n", () => {
 
   Object.keys(testCase).forEach((key) => {
     it("Latin → Cyrillic:\n", () => {
-      assert.equal(latCyr.mapSoftVowelAfterHardVowel(key), testCase[key]);
+      expect(latCyr.mapSoftVowelAfterHardVowel(key)).toBe(testCase[key]);
     });
     it("Cyrillic → Cyrillic (no change):\n", () => {
-      assert.equal(
-        latCyr.mapSoftVowelAfterHardVowel(testCase[key]),
-        testCase[key]
+      expect(latCyr.mapSoftVowelAfterHardVowel(testCase[key])).toBe(
+        testCase[key],
       );
     });
   });
 });
-
-
 
 describe("(c→l, unit) Ja, je, ji, jo, ju before a vowel:\n", () => {
   let testCase = {
@@ -396,10 +379,10 @@ describe("(c→l, unit) Ja, je, ji, jo, ju before a vowel:\n", () => {
 
   Object.keys(testCase).forEach((key) => {
     it("Cyrillic → Latin:\n", () => {
-      assert.equal(cyrLat.mapSoftVowelAfterHardVowel(testCase[key]), key);
+      expect(cyrLat.mapSoftVowelAfterHardVowel(testCase[key])).toBe(key);
     });
     it("Latin → Latin (no change):\n", () => {
-      assert.equal(cyrLat.mapSoftVowelAfterHardVowel(key), key);
+      expect(cyrLat.mapSoftVowelAfterHardVowel(key)).toBe(key);
     });
   });
 });

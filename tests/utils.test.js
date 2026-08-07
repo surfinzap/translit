@@ -1,16 +1,12 @@
-import assert from "assert";
+import { describe, expect, it } from "vitest";
 import { translit } from "../src/translit.js";
-import { 
-  mapObjectToUpperCase, 
-  mapArrayToUpperCase, 
-  lowerCaseWords } from "./scaffolding.js";
 import {
-  normalizeApostrophes, 
-  normalizeHomoglyphs,
-  processUpperCase,
-} from "../src/utils.js";
-
-
+  mapObjectToUpperCase,
+  mapArrayToUpperCase,
+  lowerCaseWords,
+} from "./scaffolding.js";
+import { normalizeApostrophes, normalizeHomoglyphs } from "../src/utils.js";
+import { processUpperCase } from "../src/upper_case.js";
 
 describe("(unit) Normalize apostrophes:\n", () => {
   const accentChars = ["'", "’", "ʼ", "‘", "‛", "´", "`", "′"];
@@ -81,7 +77,7 @@ describe("(unit) Normalize apostrophes:\n", () => {
 
   Object.keys(expectedUseCases).forEach((key) => {
     it("should change the apostrophe:\n", () => {
-      assert.equal(normalizeApostrophes(key), expectedUseCases[key]);
+      expect(normalizeApostrophes(key)).toBe(expectedUseCases[key]);
     });
   });
 
@@ -111,11 +107,10 @@ describe("(unit) Normalize apostrophes:\n", () => {
 
   Object.keys(falsePositives).forEach((key) => {
     it("shouldn’t change the apostrophe:\n", () => {
-      assert.equal(normalizeApostrophes(key), falsePositives[key]);
+      expect(normalizeApostrophes(key)).toBe(falsePositives[key]);
     });
   });
 });
-
 
 describe("(c→l) Normalize homoglyphs:\n", () => {
   // Cyrillic+Stray Latin | Cyrillic | Latin
@@ -153,82 +148,74 @@ describe("(c→l) Normalize homoglyphs:\n", () => {
     ([input, expectedCyrillic, expectedLatin, exception]) => {
       if (exception == undefined) {
         it("(cyr → cyr) should consolidate stray Latin characters:\n", () => {
-          assert.equal(normalizeHomoglyphs(input, "latCyr"), expectedCyrillic);
+          expect(normalizeHomoglyphs(input, "latCyr")).toBe(expectedCyrillic);
         });
 
         it("(cyr → cyr → cyr) should consolidate stray Latin characters:\n", () => {
-          assert.equal(
+          expect(
             normalizeHomoglyphs(normalizeHomoglyphs(input, "latCyr"), "latCyr"),
-            expectedCyrillic
-          );
+          ).toBe(expectedCyrillic);
         });
 
         it("(cyr → cyr) (module) should consolidate stray Latin characters:\n", () => {
-          assert.equal(translit(input, "latCyr"), expectedCyrillic);
+          expect(translit(input, "latCyr")).toBe(expectedCyrillic);
         });
       }
 
       it("(lat → lat) shouldn’t change Latin words:\n", () => {
-        assert.equal(
-          normalizeHomoglyphs(expectedLatin, "cyrLat"),
-          expectedLatin
+        expect(normalizeHomoglyphs(expectedLatin, "cyrLat")).toBe(
+          expectedLatin,
         );
       });
 
       it("(lat → lat → lat) shouldn’t change Latin words:\n", () => {
-        assert.equal(
+        expect(
           normalizeHomoglyphs(
             normalizeHomoglyphs(expectedLatin, "cyrLat"),
-            "cyrLat"
+            "cyrLat",
           ),
-          expectedLatin
-        );
+        ).toBe(expectedLatin);
       });
 
       it("(cyr → cyr) shouldn’t change Cyrillic words:\n", () => {
-        assert.equal(
-          normalizeHomoglyphs(expectedCyrillic, "latCyr"),
-          expectedCyrillic
+        expect(normalizeHomoglyphs(expectedCyrillic, "latCyr")).toBe(
+          expectedCyrillic,
         );
       });
 
       it("(cyr → cyr → cyr) shouldn’t change Cyrillic words:\n", () => {
-        assert.equal(
+        expect(
           normalizeHomoglyphs(
             normalizeHomoglyphs(expectedCyrillic, "latCyr"),
-            "latCyr"
+            "latCyr",
           ),
-          expectedCyrillic
-        );
+        ).toBe(expectedCyrillic);
       });
 
       it("(cyr → lat → cyr) shouldn’t change Cyrillic words:\n", () => {
-        assert.equal(
+        expect(
           normalizeHomoglyphs(
             normalizeHomoglyphs(expectedCyrillic, "cyrLat"),
-            "latCyr"
+            "latCyr",
           ),
-          expectedCyrillic
-        );
+        ).toBe(expectedCyrillic);
       });
 
       it("(lat → cyr → lat) shouldn’t change Latin words:\n", () => {
-        assert.equal(
+        expect(
           normalizeHomoglyphs(
             normalizeHomoglyphs(expectedLatin, "latCyr"),
-            "cyrLat"
+            "cyrLat",
           ),
-          expectedLatin
-        );
+        ).toBe(expectedLatin);
       });
 
       it("(cyr → lat) (module) should convert to Latin correctly:\n", () => {
-        assert.equal(translit(input, "cyrLat"), expectedLatin);
+        expect(translit(input, "cyrLat")).toBe(expectedLatin);
       });
-    }
+    },
   );
 });
-
 
 describe("(l→c) Normalize homoglyphs:\n", () => {
   let homoglyphsLatCyr = [
@@ -263,82 +250,74 @@ describe("(l→c) Normalize homoglyphs:\n", () => {
     ([input, expectedLatin, expectedCyrillic, exception]) => {
       if (exception == undefined) {
         it("(lat → lat) should consolidate stray Cyrillic characters:\n", () => {
-          assert.equal(normalizeHomoglyphs(input, "cyrLat"), expectedLatin);
+          expect(normalizeHomoglyphs(input, "cyrLat")).toBe(expectedLatin);
         });
 
         it("(lat → lat → lat) should consolidate stray Cyrillic characters:\n", () => {
-          assert.equal(
+          expect(
             normalizeHomoglyphs(normalizeHomoglyphs(input, "cyrLat"), "cyrLat"),
-            expectedLatin
-          );
+          ).toBe(expectedLatin);
         });
       }
 
       it("(cyr → cyr) shouldn’t change Cyrillic words:\n", () => {
-        assert.equal(
-          normalizeHomoglyphs(expectedCyrillic, "latCyr"),
-          expectedCyrillic
+        expect(normalizeHomoglyphs(expectedCyrillic, "latCyr")).toBe(
+          expectedCyrillic,
         );
       });
 
       it("(cyr → cyr → cyr) shouldn’t change Cyrillic words:\n", () => {
-        assert.equal(
+        expect(
           normalizeHomoglyphs(
             normalizeHomoglyphs(expectedCyrillic, "latCyr"),
-            "latCyr"
+            "latCyr",
           ),
-          expectedCyrillic
-        );
+        ).toBe(expectedCyrillic);
       });
 
       it("(lat → lat) shouldn’t change Latin words:\n", () => {
-        assert.equal(
-          normalizeHomoglyphs(expectedLatin, "cyrLat"),
-          expectedLatin
+        expect(normalizeHomoglyphs(expectedLatin, "cyrLat")).toBe(
+          expectedLatin,
         );
       });
 
       it("(lat → lat → lat) shouldn’t change Latin words:\n", () => {
-        assert.equal(
+        expect(
           normalizeHomoglyphs(
             normalizeHomoglyphs(expectedLatin, "cyrLat"),
-            "cyrLat"
+            "cyrLat",
           ),
-          expectedLatin
-        );
+        ).toBe(expectedLatin);
       });
 
       it("(lat → cyr → lat) shouldn’t change Latin words:\n", () => {
-        assert.equal(
+        expect(
           normalizeHomoglyphs(
             normalizeHomoglyphs(expectedLatin, "latCyr"),
-            "cyrLat"
+            "cyrLat",
           ),
-          expectedLatin
-        );
+        ).toBe(expectedLatin);
       });
 
       it("(cyr → lat → cyr) shouldn’t change Cyrillic words:\n", () => {
-        assert.equal(
+        expect(
           normalizeHomoglyphs(
             normalizeHomoglyphs(expectedCyrillic, "cyrLat"),
-            "latCyr"
+            "latCyr",
           ),
-          expectedCyrillic
-        );
+        ).toBe(expectedCyrillic);
       });
 
       it("(lat → cyr) (module) should convert to Cyrillic correctly:\n", () => {
-        assert.equal(translit(input, "latCyr"), expectedCyrillic);
+        expect(translit(input, "latCyr")).toBe(expectedCyrillic);
       });
 
       it("(lat → lat) (module) should consolidate stray Cyrillic characters:\n", () => {
-        assert.equal(translit(input, "cyrLat"), expectedLatin);
+        expect(translit(input, "cyrLat")).toBe(expectedLatin);
       });
-    }
+    },
   );
 });
-
 
 describe("(unit) Uppercase tests:\n", () => {
   let testCase = {
@@ -383,16 +362,16 @@ describe("(unit) Uppercase tests:\n", () => {
 
   Object.keys(testCase).forEach((key) => {
     it("Latin → Cyrillic:\n", () => {
-      assert.equal(processUpperCase(key, "latCyr"), testCase[key]);
+      expect(processUpperCase(key, "latCyr")).toBe(testCase[key]);
     });
     it("Cyrillic → Cyrillic:\n", () => {
-      assert.equal(processUpperCase(testCase[key], "latCyr"), testCase[key]);
+      expect(processUpperCase(testCase[key], "latCyr")).toBe(testCase[key]);
     });
     it("Cyrillic → Latin:\n", () => {
-      assert.equal(processUpperCase(testCase[key], "cyrLat"), key);
+      expect(processUpperCase(testCase[key], "cyrLat")).toBe(key);
     });
     it("Latin → Latin (no change):\n", () => {
-      assert.equal(processUpperCase(key, "cyrLat"), key);
+      expect(processUpperCase(key, "cyrLat")).toBe(key);
     });
   });
 });
