@@ -1,28 +1,16 @@
-/*!
- * Translit v3.0.2 (Rusyn transliteration)
- * Copyright 2014–2025 Braňo Šandala (https://brano.me)
- * 
- * app: https://tota.sk/translit
- * src: https://github.com/surfinzap/translit-rue
- * 
- * Licensed under MIT (https://github.com/surfinzap/translit-rue/blob/main/LICENSE.txt)
- */
-import {
-  processUpperCase,
-  normalizeHomoglyphs
-} from "./utils";
-import * as latCyr from "./lat_to_cyr";
-import * as cyrLat from "./cyr_to_lat";
-
+import { normalizeHomoglyphs } from "./utils.js";
+import { processUpperCase } from "./upper_case.js";
+import * as latCyr from "./lat_to_cyr.js";
+import * as cyrLat from "./cyr_to_lat.js";
 
 /**
  * PUBLIC API
- * Transliterates a string between Latin and Cyrillic scripts based on the specified direction. 
+ * Transliterates a string between Latin and Cyrillic scripts based on the specified direction.
  *
  * @param {string} string - The input string to be transliterated.
- * @param {string} direction - The direction of transliteration. 
+ * @param {string} direction - The direction of transliteration.
  * Use "latCyr" to convert Latin to Cyrillic, and "cyrLat" to convert Cyrillic to Latin.
- * 
+ *
  * @returns {string} - The transliterated string.
  */
 export function translit(string, direction) {

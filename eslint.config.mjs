@@ -45,14 +45,16 @@ const envGlobals = {
     Reflect: "readonly",
     globalThis: "readonly",
   },
-  mocha: {
+  vitest: {
     describe: "readonly",
     it: "readonly",
-    before: "readonly",
-    after: "readonly",
+    test: "readonly",
+    expect: "readonly",
+    vi: "readonly",
+    beforeAll: "readonly",
+    afterAll: "readonly",
     beforeEach: "readonly",
     afterEach: "readonly",
-    context: "readonly",
   },
 };
 
@@ -65,7 +67,7 @@ export default [
         ...envGlobals.node,
         ...envGlobals.browser,
         ...envGlobals.es6,
-        ...envGlobals.mocha,
+        ...envGlobals.vitest,
       },
     },
     rules: {

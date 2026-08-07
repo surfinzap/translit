@@ -1,5 +1,5 @@
-import { vowelsLowerCase, chars, mapping } from "./constants";
-import { applyTranslitRule,normalizeApostrophes } from "./utils";
+import { vowelsLowerCase, chars, mapping } from "./constants.js";
+import { applyTranslitRule, normalizeApostrophes } from "./utils.js";
 
 /**  
   Consolidate letter group (ďď | ťť | ňň | ľľ) followed by aeiou
@@ -41,8 +41,6 @@ export function mapDtnlDoubled(string) {
   });
 }
 
-
-
 /**
   Transliterate words that begin with "naj|Naj|NAJ" followed by a vowel to "най|Най|НАЙ"
 
@@ -68,21 +66,21 @@ export function mapDtnlDoubled(string) {
   @param {string} string - input text for mapping
   @returns {string} - where all words that begin with "naj|Naj|NAJ" followed by a vowel will be transliterated to "най|Най|НАЙ"
 */
-export function mapSuperlative(string){
+export function mapSuperlative(string) {
   let pattern =
-    "(\\b)"
-  + "(naj)"
-  + "([" + vowelsLowerCase.latin + "])"
-  + "([" + chars.lowerCase + "]+?)"
-  + "(šŷj|šoho|šomu|šim|šŷm|šŷ|šŷch|šŷma|ša|šoj|šij|šu|šov|še)";
+    `(\\b)` +
+    `(naj)` +
+    `([${vowelsLowerCase.latin}])` +
+    `([${chars.lowerCase}]+?)` +
+    `(šŷj|šoho|šomu|šim|šŷm|šŷ|šŷch|šŷma|ša|šoj|šij|šu|šov|še)`;
   let re = new RegExp(pattern, "gi");
 
-  return string.replace(re, function($0, $1, $2, $3, $4, $5){
-    return $1 + applyTranslitRule($2, mapping.singleChars, "latCyr") + $3 + $4 + $5;
+  return string.replace(re, function ($0, $1, $2, $3, $4, $5) {
+    return (
+      $1 + applyTranslitRule($2, mapping.singleChars, "latCyr") + $3 + $4 + $5
+    );
   });
 }
-
-
 
 /**
   Transliterate consecutive soft vowels (ja, je, ji, jo, ju) from latin to cyrillic
@@ -102,17 +100,13 @@ export function mapSuperlative(string){
   @returns {string} - cyrillic text with mapped ja, je, ji, jo, ju
 */
 export function mapSoftVowelsSequence(string) {
-  let pattern =
-      "(\\b)"
-    + "((jo|ja|je|ji|ju){2,})";
+  let pattern = "(\\b)" + "((jo|ja|je|ji|ju){2,})";
   let re = new RegExp(pattern, "gi");
 
-  return string.replace(re, function($0, $1, $2){
+  return string.replace(re, function ($0, $1, $2) {
     return $1 + applyTranslitRule($2, mapping.softVowels, "latCyr");
   });
 }
-
-
 
 /**
   Transliterate ja, je, ji, ju at the beginning of the word
@@ -157,8 +151,6 @@ export function mapSoftVowelAtWordStart(string) {
   });
 }
 
-
-
 /** 
   Transliterate ja, je, ji, jo, ju before a vowel (a, e, i, o, u, y, ŷ)
 
@@ -175,17 +167,13 @@ export function mapSoftVowelAtWordStart(string) {
   @returns {string} - cyrillic text with mapped ja, je, ji, jo, ju
 */
 export function mapSoftVowelAfterHardVowel(string) {
-  let pattern =
-      "([" + vowelsLowerCase.latin + "])"
-    + "(ja|je|ji|jo|ju)";
+  let pattern = "([" + vowelsLowerCase.latin + "])" + "(ja|je|ji|jo|ju)";
   let re = new RegExp(pattern, "gi");
 
-  return string.replace(re, function($0, $1, $2){
+  return string.replace(re, function ($0, $1, $2) {
     return $1 + applyTranslitRule($2, mapping.softVowels, "latCyr");
   });
 }
-
-
 
 /**
   Transliterate words that begin with joj-, jov- from latin to cyrillic
@@ -198,17 +186,13 @@ export function mapSoftVowelAfterHardVowel(string) {
   @returns {string} - cyrillic text with mapped joj-, jov- 
 */
 export function mapJojJovBeginningWord(string) {
-  let pattern =
-      "(\\b)"
-    + "(joj|jov)";
+  let pattern = "(\\b)" + "(joj|jov)";
   let re = new RegExp(pattern, "gi");
 
-  return string.replace(re, function($0, $1, $2){
+  return string.replace(re, function ($0, $1, $2) {
     return $1 + applyTranslitRule($2, mapping.jojJov, "latCyr");
   });
 }
-
-
 
 /**
   Transliterate single word “jo”
@@ -222,26 +206,21 @@ export function mapJojJovBeginningWord(string) {
 */
 export function mapSingleJo(string) {
   let pattern =
-      "(^|[^" + chars.all + "])"
-    + "(jo)"
-    + "([^" + chars.all + "]|$)";
+    "(^|[^" + chars.all + "])" + "(jo)" + "([^" + chars.all + "]|$)";
   let re = new RegExp(pattern, "gi");
 
-  return string.replace(re, function($0, $1, $2, $3){
+  return string.replace(re, function ($0, $1, $2, $3) {
     return $1 + applyTranslitRule($2, mapping.softVowels, "latCyr") + $3;
   });
 }
 
-
-
 /**
- * Processes a string by applying a series of transliteration rules to convert Latin text to Cyrillic. 
+ * Processes a string by applying a series of transliteration rules to convert Latin text to Cyrillic.
  *
  * @param {string} string - The input string in Latin script.
  * @returns {string} - The processed string in Cyrillic script.
  */
 export function applyTransformations(string) {
-
   const transformations = [
     normalizeApostrophes,
     mapSuperlative,
@@ -266,13 +245,12 @@ export function applyTransformations(string) {
 
   string = transformations.reduce(
     (result, transform) => transform(result),
-    string
+    string,
   );
 
   string = mappingRules.reduce(
-    (result, mappingRule) =>
-      applyTranslitRule(result, mappingRule, "latCyr"),
-    string
+    (result, mappingRule) => applyTranslitRule(result, mappingRule, "latCyr"),
+    string,
   );
 
   return string;

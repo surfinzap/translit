@@ -1,5 +1,5 @@
-import { vowelsLowerCase, chars, mapping } from "./constants";
-import { applyTranslitRule } from "./utils";
+import { vowelsLowerCase, chars, mapping } from "./constants.js";
+import { applyTranslitRule } from "./utils.js";
 
 /**  
   Consolidate letter group (дд | тт | нн | лл) followed by яєїёю
@@ -41,8 +41,6 @@ export function mapDtnlDoubled(string) {
   });
 }
 
-
-
 /**
   Transliterate consecutive soft vowels (ja, je, ji, jo, ju) from cyrillic to latin
 
@@ -62,16 +60,18 @@ export function mapDtnlDoubled(string) {
 */
 export function mapSoftVowelsSequence(string) {
   let pattern =
-      "([^" + chars.all + "]|^)"
-    + "(([" + vowelsLowerCase.cyrillicSoft + "]){2,})";
+    "([^" +
+    chars.all +
+    "]|^)" +
+    "(([" +
+    vowelsLowerCase.cyrillicSoft +
+    "]){2,})";
   let re = new RegExp(pattern, "gi");
 
-  return string.replace(re, function($0, $1, $2){
+  return string.replace(re, function ($0, $1, $2) {
     return $1 + applyTranslitRule($2, mapping.softVowels, "cyrLat");
   });
 }
-
-
 
 /*
   Transliterate я, є, ї, ё, ю at the beginning of the word
@@ -103,16 +103,13 @@ export function mapSoftVowelsSequence(string) {
 */
 export function mapSoftVowelAtWordStart(string) {
   let pattern =
-    "([^" + chars.all + "]|^)"
-  + "([" + vowelsLowerCase.cyrillicSoft + "])";
+    "([^" + chars.all + "]|^)" + "([" + vowelsLowerCase.cyrillicSoft + "])";
   let re = new RegExp(pattern, "gi");
 
   return string.replace(re, function ($0, $1, $2) {
     return $1 + applyTranslitRule($2, mapping.softVowels, "cyrLat");
   });
 }
-
-
 
 /**
   Transliterate я, є, ї, ё, ю before a vowel (а, е, і, о, у, и, ы)
@@ -130,18 +127,19 @@ export function mapSoftVowelAtWordStart(string) {
   @returns {string} - cyrillic text with mapped я, є, ї, ё, ю
 */
 export function mapSoftVowelAfterHardVowel(string) {
-
   let pattern =
-      "([" + vowelsLowerCase.cyrillicHard + "])"
-    + "([" + vowelsLowerCase.cyrillicSoft + "])";
+    "([" +
+    vowelsLowerCase.cyrillicHard +
+    "])" +
+    "([" +
+    vowelsLowerCase.cyrillicSoft +
+    "])";
   let re = new RegExp(pattern, "gi");
 
-  return string.replace(re, function($0, $1, $2){
+  return string.replace(re, function ($0, $1, $2) {
     return $1 + applyTranslitRule($2, mapping.softVowels, "cyrLat");
   });
 }
-
-
 
 /**
  * Processes a string by applying a series of transliteration rules to convert Cyrillic text to Latin.
@@ -169,12 +167,12 @@ export function applyTransformations(string) {
 
   string = transformations.reduce(
     (result, transform) => transform(result),
-    string
+    string,
   );
 
   string = mappingRules.reduce(
     (result, mappingRule) => applyTranslitRule(result, mappingRule, "cyrLat"),
-    string
+    string,
   );
 
   return string;

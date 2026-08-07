@@ -8,7 +8,7 @@ export const vowelsLowerCase = {
   latin: "aeiouyŷ",
   cyrillicHard: "аеіоуиыї",
   cyrillicSoft: "яєїёю",
-}
+};
 
 const latinLowerCase = "a-záäčďéěíĺľňóôöőŕřšťúüűůýŷž";
 const cyrillicLowerCase = "абвгґдезіийклмнопрстуфъыьцчжшїщёєюях";
@@ -37,7 +37,6 @@ for (const [key, value] of Object.entries(exceptions)) {
   const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
   exceptionsCapitalized[capitalizedKey] = capitalizedValue;
 }
-
 
 /*
   Mapping between latin and cyrillic characters
@@ -337,17 +336,5 @@ export const mapping = {
     "Jov": "Ёв",
   },
   "exceptions": exceptions,
-  "exceptionsCapitalized": exceptionsCapitalized
+  "exceptionsCapitalized": exceptionsCapitalized,
 };
-
-
-
-
-
-
-
-
-
-
-
-

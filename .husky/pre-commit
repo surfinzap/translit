@@ -1,11 +1,5 @@
-# Lint test JavaScript
-pnpm lint
-
-# Update Copyright in translit.js before committing
-gulp updateCopyrightBanner
-
-# Add updated file version to the commit
-git add src/translit.js
+# Format and lint staged files
+pnpm lint-staged
 
 # run build
 pnpm build
