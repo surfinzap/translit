@@ -37,4 +37,5 @@ jobs:
         run: npm install -g pnpm
       - run: pnpm install
       - run: pnpm build
-      - run: npm publish --provenance --access public --no-git-checks
+      # Note: --no-git-checks is a pnpm flag; npm rejects it (EUNKNOWNCONFIG)
+      - run: npm publish --provenance --access public
